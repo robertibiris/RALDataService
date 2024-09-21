@@ -1,5 +1,6 @@
 
 import Foundation
+import RALLogger
 
 struct CertificatePinner {
     
@@ -43,8 +44,7 @@ struct CertificatePinner {
                 
             case .serverTrustNotFound, .invalidServerTrust, .failedToExtractServerCertificate, .noMatchingCertificatesFound:
                 //cancel request
-                print("ERROR!!!: CertificatePinner Challenge cancelled for \(host)")
-//                Logger.shared.log("CertificatePinner Challenge cancelled for \(host)", level: .error)
+                Logger.shared.log("CertificatePinner Challenge cancelled for \(host)", level: .error)
                 challenge.sender?.cancel(challenge)
                 completionHandler(.cancelAuthenticationChallenge, nil)
                 
@@ -83,8 +83,8 @@ struct CertificatePinner {
         //Actual pinning
         let remoteCertificateData = SecCertificateCopyData(certificate) as Data
         if let _ = hostCertificates.lazy.compactMap({ Data(base64Encoded: $0) }).first(where: {
-            print("CERTIFICATE:\n\($0.base64EncodedString())")
-            print("\nremoteCertificateData:\n\(remoteCertificateData.base64EncodedString())")
+            Logger.shared.log("CERTIFICATE:\n\($0.base64EncodedString())", level: .debug)
+            Logger.shared.log("\nremoteCertificateData:\n\(remoteCertificateData.base64EncodedString())", level: .debug)
             return $0 == remoteCertificateData
         }) {
             return .success(serverTrust)

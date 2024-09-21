@@ -1,5 +1,6 @@
 
 import Foundation
+import RALLogger
 
 //MARK: Types
 public struct EmptyType {
@@ -98,7 +99,7 @@ public class RALNetworkRequester: NSObject, NetworkRequester {
         let session = self.session
         let urlRequest = endpoint.urlRequest(baseURL: self.baseURL)
 
-        print("urlRequest: \(urlRequest)")
+        Logger.shared.log("urlRequest: \(urlRequest)")
 
         let task = session.dataTask(with: urlRequest) { (data, response, error) in
             
@@ -141,7 +142,7 @@ public class RALNetworkRequester: NSObject, NetworkRequester {
 
             } else {
                 //Unsupported
-                print("Only JSON and EmptyType response data formats are supported. did we add a new supported type?")
+                Logger.shared.log("Only JSON and EmptyType response data formats are supported. did we add a new supported type?")
                 completion(.failure(.unsupportedResponseDataFormat))
                 return
             }

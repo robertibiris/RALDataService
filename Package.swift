@@ -14,16 +14,16 @@ let package = Package(
             name: "RALDataService",
             targets: ["RALDataService"]),
     ],
-//    dependencies: [
-//            // Add the local package dependency here
-//            .package(path: "../RALLogger")  // Relative path to the local package
-//        ],
+    dependencies: [
+            // Add the local package dependency here
+            .package(path: "../RALLogger")  // Relative path to the local package
+        ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "RALDataService"
-//            dependencies: ["RALLogger"]
+            name: "RALDataService",
+            dependencies: ["RALLogger"]
         ),
         .testTarget(
             name: "RALDataServiceTests",
