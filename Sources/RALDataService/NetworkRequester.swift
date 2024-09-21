@@ -2,49 +2,49 @@
 import Foundation
 
 //MARK: Types
-struct EmptyType {
+public struct EmptyType {
     init() {}
 }
 extension EmptyType: NWModel {}
 
-typealias ResultCompletion<T, E: Error> = ((Swift.Result<T, E>) -> Void)
-typealias SSLCertificates = [Host: [Certificate]]
-typealias Host = String
-typealias Certificate = String
+public typealias ResultCompletion<T, E: Error> = ((Swift.Result<T, E>) -> Void)
+public typealias SSLCertificates = [Host: [Certificate]]
+public typealias Host = String
+public typealias Certificate = String
 
 //MARK: NetworkData
 
 ///Protocol for defining what types are allowed to be returned from a network request. for now only supporting EmptyType and JSON. if a new type is added, we need to update the `RALNetworkRequester.execute<T>` method below
-protocol NetworkData {}
+public protocol NetworkData {}
 extension JSON: NetworkData {}
 extension Array: NetworkData where Element == JSON {}
 extension EmptyType: NetworkData {}
 
 //MARK: - NetworkTask
 
-protocol NetworkTask {
+public protocol NetworkTask {
     var identifier: String { get }
     func cancel()
 }
 
-struct RALNetworkTask: NetworkTask {
+public struct RALNetworkTask: NetworkTask {
     
     let sessionTask: URLSessionTask
-    let identifier: String
+    public let identifier: String
     
     init(sessionTask: URLSessionTask, identifier: String = UUID().uuidString) {
         self.sessionTask = sessionTask
         self.identifier = identifier
     }
     
-    func cancel() {
+    public func cancel() {
         self.sessionTask.cancel()
     }
 }
 
 //MARK: - NetworkRequester
 
-enum NetworkRequesterError: Error {
+public enum NetworkRequesterError: Error {
     case HTTPResponseNotFound
     case badHTTPResponseCode(Data?)
     case taskCancelled
@@ -56,26 +56,26 @@ enum NetworkRequesterError: Error {
     case unknown(Error)
 }
 
-protocol NetworkRequester {
+public protocol NetworkRequester {
     typealias Errors = NetworkRequesterError
     @discardableResult
     func execute<T: NetworkData, E: Endpoint>(endpoint: E, completion: @escaping ResultCompletion<T, Errors>) -> NetworkTask
 }
 
 
-struct NetworkConfiguration {
+public struct NetworkConfiguration {
     let baseURL: URL
     let sessionConfiguration: URLSessionConfiguration
     let sslCertificates: SSLCertificates
     
-    init(baseURL: URL, sessionConfiguration: URLSessionConfiguration, sslCertificates: SSLCertificates) {
+    public init(baseURL: URL, sessionConfiguration: URLSessionConfiguration, sslCertificates: SSLCertificates) {
         self.baseURL = baseURL
         self.sessionConfiguration = sessionConfiguration
         self.sslCertificates = sslCertificates
     }
 }
 
-class RALNetworkRequester: NSObject, NetworkRequester {
+public class RALNetworkRequester: NSObject, NetworkRequester {
     
     private lazy var session: URLSession = {
         URLSession(configuration: self.sessionConfiguration, delegate: self, delegateQueue: nil)
@@ -85,7 +85,7 @@ class RALNetworkRequester: NSObject, NetworkRequester {
     private let certificatePinner = CertificatePinner()
     private let baseURL: URL
     
-    init(networkConfiguration: NetworkConfiguration) {
+    public init(networkConfiguration: NetworkConfiguration) {
         self.baseURL = networkConfiguration.baseURL
         self.sessionConfiguration = networkConfiguration.sessionConfiguration
         self.sslCertificates = networkConfiguration.sslCertificates
@@ -93,7 +93,7 @@ class RALNetworkRequester: NSObject, NetworkRequester {
     }
     
     @discardableResult
-    func execute<T, E>(endpoint: E, completion: @escaping (Result<T, Errors>) -> Void) -> NetworkTask where T : NetworkData, E : Endpoint {
+    public func execute<T, E>(endpoint: E, completion: @escaping (Result<T, Errors>) -> Void) -> NetworkTask where T : NetworkData, E : Endpoint {
 
         let session = self.session
         let urlRequest = endpoint.urlRequest(baseURL: self.baseURL)
@@ -157,7 +157,7 @@ class RALNetworkRequester: NSObject, NetworkRequester {
 
 extension RALNetworkRequester: URLSessionDelegate {
     
-    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    public func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         
         self.certificatePinner.performPinning(for: challenge, using: self.sslCertificates, completionHandler: completionHandler)
     }

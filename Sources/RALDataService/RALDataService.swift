@@ -2,12 +2,12 @@
 import Foundation
 
 //MARK: - General purpose Data NWModel protocols
-protocol NWModel {}
+public protocol NWModel {}
 extension Array: NWModel where Element: NWModel {}
 
 //MARK: - DataService
 
-protocol DataService {
+public protocol DataService {
     typealias Errors = RALDataService.Errors
     
     //generic requests
@@ -24,8 +24,8 @@ protocol DataService {
 
 //MARK: - RALDataService
 
-class RALDataService: DataService {
-    enum Errors: Error, ErrorInitializable {
+open class RALDataService: DataService {
+    public enum Errors: Error, ErrorInitializable {
         case managerDeallocated
         case parsingFailed
         case noContentResponse
@@ -33,22 +33,22 @@ class RALDataService: DataService {
         case serverError(String)
         case unknown(Error)
         
-        init(error: Error) {
+        public init(error: Error) {
             self = .unknown(error)
         }
     }
     
     let networkRequester: NetworkRequester
 
-    init(networkRequester: NetworkRequester) {
+    public init(networkRequester: NetworkRequester) {
         self.networkRequester = networkRequester
     }
 
-    func performDataRequest<T, E>(_ endpoint: E, decoder: @escaping ((E.ResponseData) -> T?), completion: ResultCompletion<T, Errors>?) -> NetworkTask where T : NWModel, E : Endpoint {
+    public func performDataRequest<T, E>(_ endpoint: E, decoder: @escaping ((E.ResponseData) -> T?), completion: ResultCompletion<T, Errors>?) -> NetworkTask where T : NWModel, E : Endpoint {
         self.performDataRequest(endpoint, decoder: decoder, completion: completion, completeOn: .main)
     }
 
-    func performDataRequest<T: NWModel, E: Endpoint>(_ endpoint: E, decoder: @escaping ((E.ResponseData)->T?), completion: ResultCompletion<T, Errors>?, completeOn queue: DispatchQueue) -> NetworkTask {
+    public func performDataRequest<T: NWModel, E: Endpoint>(_ endpoint: E, decoder: @escaping ((E.ResponseData)->T?), completion: ResultCompletion<T, Errors>?, completeOn queue: DispatchQueue) -> NetworkTask {
         
         return self.networkRequester.execute(endpoint: endpoint) { (result: Result<E.RawResponseData, NetworkRequester.Errors>) in
             
@@ -76,7 +76,7 @@ class RALDataService: DataService {
     
     // Async/await
 
-    func performDataRequest<T: NWModel, E: Endpoint>(_ endpoint: E, decoder: @escaping ((E.ResponseData)->T?)) async throws -> T {
+    public func performDataRequest<T: NWModel, E: Endpoint>(_ endpoint: E, decoder: @escaping ((E.ResponseData)->T?)) async throws -> T {
         
         // #takeaway when bridging block-based async to Swift Concurrency, we can use Continuations to expose a modern async API but use internnally the block_based implementation. we just need to resume the continuation when done (and ALWAYS should be RESUMED at some ponint?)
         return try await withCheckedThrowingContinuation { [weak self] continuation in

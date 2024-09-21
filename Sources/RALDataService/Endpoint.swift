@@ -1,12 +1,12 @@
 
 import Foundation
 
-typealias NWPath = String
-typealias HTTPHeaders = [String: String]
-typealias URLParameters = [String: String]
+public typealias NWPath = String
+public typealias HTTPHeaders = [String: String]
+public typealias URLParameters = [String: String]
 
 
-enum HTTPMethod {
+public enum HTTPMethod {
     case get
     case post
     case put
@@ -14,7 +14,7 @@ enum HTTPMethod {
     case delete
 }
 
-enum HTTPBody {
+public enum HTTPBody {
     case json(JSON)
     case data(Data, contentType: String)
 
@@ -35,11 +35,11 @@ enum HTTPBody {
     }
 }
 
-enum EndpointAuthentication {
+public enum EndpointAuthentication {
     case none, basic, authenticated
 }
 
-protocol Endpoint {
+public protocol Endpoint {
     ///The non-traversed response type
     associatedtype RawResponseData: NetworkData
     ///The traversed response type
@@ -90,35 +90,35 @@ extension Endpoint {
 }
 
 ///Convenience for a default impleemntation when `RawResponseData == ResponseData`, we just return the raw value directly. This is only to avoid biolerplate of endpoints that don't really need traversing
-extension Endpoint where RawResponseData == ResponseData {
+public extension Endpoint where RawResponseData == ResponseData {
     func traverse(rawResponse: RawResponseData) -> ResponseData? {
         return rawResponse
     }
 }
 
-protocol GetEndpoint: Endpoint {}
-extension GetEndpoint {
+public protocol GetEndpoint: Endpoint {}
+public extension GetEndpoint {
     var method: HTTPMethod { return .get }
     var body: HTTPBody? { return nil }
 }
 
-protocol PostEndpoint: Endpoint {}
-extension PostEndpoint {
+public protocol PostEndpoint: Endpoint {}
+public extension PostEndpoint {
     var method: HTTPMethod { return .post }
 }
 
-protocol PutEndpoint: Endpoint {}
-extension PutEndpoint {
+public protocol PutEndpoint: Endpoint {}
+public extension PutEndpoint {
     var method: HTTPMethod { return .put }
 }
 
-protocol PatchEndpoint: Endpoint {}
-extension PatchEndpoint {
+public protocol PatchEndpoint: Endpoint {}
+public extension PatchEndpoint {
     var method: HTTPMethod { return .patch }
 }
 
-protocol DeleteEndpoint: Endpoint {}
-extension DeleteEndpoint {
+public protocol DeleteEndpoint: Endpoint {}
+public extension DeleteEndpoint {
     var method: HTTPMethod { return .delete }
 }
 

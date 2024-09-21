@@ -1,10 +1,10 @@
 
 import Foundation
 
-typealias JSON = [String: Any]
+public typealias JSON = [String: Any]
 
 /// Convenience subscripts for getting different types from a JSON
-extension JSON {
+public extension JSON {
     
     //MARK: - JSON
     subscript(jsonFor key: String) -> JSON? {
