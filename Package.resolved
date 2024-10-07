@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "rallogger",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/robertibiris/RALLogger.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "f39c67d0e0db9b630abcdea5bedde32062a637fb"
+      }
+    }
+  ],
+  "version" : 2
+}
