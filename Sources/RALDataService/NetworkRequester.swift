@@ -99,7 +99,7 @@ public class RALNetworkRequester: NSObject, NetworkRequester {
         let session = self.session
         let urlRequest = endpoint.urlRequest(baseURL: self.baseURL)
 
-        Logger.shared.log("urlRequest: \(urlRequest)")
+        Logger.shared.log("urlRequest: \(urlRequest.curlString)")
 
         let task = session.dataTask(with: urlRequest) { (data, response, error) in
             
