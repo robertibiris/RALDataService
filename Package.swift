@@ -15,8 +15,8 @@ let package = Package(
             targets: ["RALDataService"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/robertibiris/RALLogger.git", branch: "main")
-        // .package(path: "../RALLogger")  // Relative path for local dependency
+//        .package(url: "https://github.com/robertibiris/RALLogger.git", branch: "main")
+         .package(path: "../RALLogger")  // Relative path for local dependency
         ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
